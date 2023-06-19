@@ -35,3 +35,27 @@ def int_to_text(ints):
 text_as_int = text_to_int(text)
 tensorDataset = tf.data.Dataset.from_tensor_slices(text_as_int)
 
+# splitting the resulting data into training data and test data through this process-
+""" n = int(0.9 * len(converted_data))
+train_data = data[:n]
+test_data = data[n:]
+or use this approcach- """
+# we are also first splitting our data into smaller sequences to make it easier for the model to process them-
+seq_length = 8 # this is the size of the smaller dataset
+examples_per_epoch = len(text) // (seq_length + 1)
+
+sequences = tensorDataset.batch(seq_length+1, drop_remainder=True) # Now we have split our dataset into smaller pieces for easier processing
+
+# Now its time to turn our data into input and output format. The way we split it into is as follows-
+""" We split our data for e.g. Hello into as such- input = Hell; Expected output = Ello
+This way we expect our model to predict the asked words + 1 """
+
+def splitting_chunks(chunk):
+  input = chunk[:-1]
+  expected = chunk[1:]
+  return input, expected
+
+dataset = sequences.map(splitting_chunks) # This maps the splitting onto every batch of sequence
+
+# Creating batches-
+data = dataset.shuffle(buffer_size).batch(batch_size, drop_remainder=True)
