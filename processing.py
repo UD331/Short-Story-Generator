@@ -59,3 +59,23 @@ dataset = sequences.map(splitting_chunks) # This maps the splitting onto every b
 
 # Creating batches-
 data = dataset.shuffle(buffer_size).batch(batch_size, drop_remainder=True)
+
+# Time for model creation
+def model_creation(vocab_size, embedding_dim, rnn_units, batch_size):
+  model = tf.keras.Sequential([
+      tf.keras.layers.Embedding(vocab_size, embedding_dim, batch_input_shape=[batch_size, None]),
+      tf.keras.layers.LSTM(rnn_units, return_sequences=True, recurrent_initializer='glorot_uniform'),
+      tf.keras.layers.Dense(vocab_size)
+  ])
+  return model
+
+model = model_creation(vocab_size, embedding_dim, rnn_units, batch_size)
+
+# creating our own loss function as tensorflow doesn't have a built-in loss funtion which does the correct calculations for our varied (diff dim) losses 
+def loss(labels, logits):
+  return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
+
+# compiling the model
+model.compile(optimizer='adam', loss=loss)
+
+
