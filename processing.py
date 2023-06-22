@@ -5,13 +5,16 @@ import keras
 from keras.preprocessing import sequence
 from google.colab import files
 
-path_to_file = list(files.upload().keys())[0] # getting the file from the local system
+path_to_file = tf.keras.utils.get_file('shakespeare.txt', 'https://storage.googleapis.com/download.tensorflow.org/data/shakespeare.txt')
+
+# path_to_file = list(files.upload().keys())[0] # getting the file from the local system
+# Above file too small
 text = open(path_to_file, 'rb').read().decode(encoding='utf-8') # opening, reading and storing the file in variable text
 
 vocab = sorted(set(text)) # getting all the unique characters present in our input file
 # creating some constants that would be required later-
 vocab_size = len(vocab)
-batch_size = 128
+batch_size = 64 # 128 too big, start with smaller batch sizes of 32/64
 embedding_dim = 256
 rnn_units = 1024
 buffer_size = 10000 # used to shuffle our batches in size of our buffer
@@ -41,7 +44,8 @@ train_data = data[:n]
 test_data = data[n:]
 or use this approcach- """
 # we are also first splitting our data into smaller sequences to make it easier for the model to process them-
-seq_length = 8 # this is the size of the smaller dataset
+seq_length = 100 # this is the size of the smaller dataset. Take it small if we want to analyze sentences like in this case or larger if we
+# want to analyze documents
 examples_per_epoch = len(text) // (seq_length + 1)
 
 sequences = tensorDataset.batch(seq_length+1, drop_remainder=True) # Now we have split our dataset into smaller pieces for easier processing
@@ -64,7 +68,7 @@ data = dataset.shuffle(buffer_size).batch(batch_size, drop_remainder=True)
 def model_creation(vocab_size, embedding_dim, rnn_units, batch_size):
   model = tf.keras.Sequential([
       tf.keras.layers.Embedding(vocab_size, embedding_dim, batch_input_shape=[batch_size, None]),
-      tf.keras.layers.LSTM(rnn_units, return_sequences=True, recurrent_initializer='glorot_uniform'),
+      tf.keras.layers.LSTM(rnn_units, return_sequences=True, stateful=True, recurrent_initializer='glorot_uniform'),
       tf.keras.layers.Dense(vocab_size)
   ])
   return model
@@ -76,7 +80,7 @@ def loss(labels, logits):
   return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
 
 # compiling the model
-model.compile(optimizer='adam', loss=loss)
+model.compile(optimizer='SGD', loss=loss)
 
 # setting up checkpoints to save our model training data to and allowing us to use it at any point in the future as callback to train our model
 checkpoint_dir = './checkpoints'
