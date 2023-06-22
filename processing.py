@@ -15,6 +15,7 @@ vocab = sorted(set(text)) # getting all the unique characters present in our inp
 # creating some constants that would be required later-
 vocab_size = len(vocab)
 batch_size = 64 # 128 too big, start with smaller batch sizes of 32/64
+# smaller batches also want smaller learning rates
 embedding_dim = 256
 rnn_units = 1024
 buffer_size = 10000 # used to shuffle our batches in size of our buffer
