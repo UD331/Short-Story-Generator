@@ -91,7 +91,7 @@ check_name = os.path.join(checkpoint_dir, "c_{epoch}")
 check_callback = tf.keras.callbacks.ModelCheckpoint(filepath=check_name, save_weights_only=True)
 
 # Training the model now
-history = model.fit(data, epochs= 200, callbacks=[check_callback])
+history = model.fit(data, epochs= 100, callbacks=[check_callback])
 
 # After we train our model, we retrain it with a batch size of 1 and run it again from various checkpoints (usually just calling the last checkpoint)
 model = model_creation(vocab_size, embedding_dim, rnn_units, batch_size=1)
