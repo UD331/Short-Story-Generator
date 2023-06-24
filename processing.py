@@ -9,6 +9,36 @@ path_to_file = tf.keras.utils.get_file('shakespeare.txt', 'https://storage.googl
 
 # path_to_file = list(files.upload().keys())[0] # getting the file from the local system
 # Above file too small
+
+
+"""
+
+temp = open(path_to_file, 'rb')
+pdfreader=PyPDF2.PdfReader(temp)
+
+#This will store the number of pages of this pdf file
+x=len(pdfreader.pages)
+
+#create a variable that will select the selected number of pages
+for i in range(0, x):
+  pageobj=pdfreader.pages[i]
+
+#(x+1) because python indentation starts with 0.
+#create text variable which will store all text datafrom pdf file
+  text=pageobj.extract_text()
+
+#save the extracted data from pdf to a txt file
+#we will use file handling here
+#dont forget to put r before you put the file path
+#go to the file location copy the path by right clicking on the file
+#click properties and copy the location path and paste it here.
+#put "\\your_txtfilename"
+
+  file1=open(r"1.txt","a")
+  file1.writelines(text)
+
+"""
+
 text = open(path_to_file, 'rb').read().decode(encoding='utf-8') # opening, reading and storing the file in variable text
 
 vocab = sorted(set(text)) # getting all the unique characters present in our input file
