@@ -37,6 +37,9 @@ for i in range(0, x):
   file1=open(r"1.txt","a")
   file1.writelines(text)
 
+file1.close()
+f = open("1.txt", "rb")
+text = f.read().decode(encoding='utf-8')
 """
 
 text = open(path_to_file, 'rb').read().decode(encoding='utf-8') # opening, reading and storing the file in variable text
@@ -111,7 +114,7 @@ def loss(labels, logits):
   return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
 
 # compiling the model
-model.compile(optimizer='SGD', loss=loss)
+model.compile(optimizer='adam', loss=loss)
 
 # setting up checkpoints to save our model training data to and allowing us to use it at any point in the future as callback to train our model
 checkpoint_dir = './checkpoints'
