@@ -5,13 +5,10 @@ import keras
 from keras.preprocessing import sequence
 from google.colab import files
 
-path_to_file = tf.keras.utils.get_file('shakespeare.txt', 'https://storage.googleapis.com/download.tensorflow.org/data/shakespeare.txt')
+# path_to_file = tf.keras.utils.get_file('shakespeare.txt', 'https://storage.googleapis.com/download.tensorflow.org/data/shakespeare.txt')
 
-# path_to_file = list(files.upload().keys())[0] # getting the file from the local system
-# Above file too small
-
-
-"""
+path_to_file = list(files.upload().keys())[0] # getting the file from the local system
+# Using The Picture of Dorian Gray in this case
 
 temp = open(path_to_file, 'rb')
 pdfreader=PyPDF2.PdfReader(temp)
@@ -40,9 +37,8 @@ for i in range(0, x):
 file1.close()
 f = open("1.txt", "rb")
 text = f.read().decode(encoding='utf-8')
-"""
 
-text = open(path_to_file, 'rb').read().decode(encoding='utf-8') # opening, reading and storing the file in variable text
+# text = open(path_to_file, 'rb').read().decode(encoding='utf-8') # opening, reading and storing the file in variable text
 
 vocab = sorted(set(text)) # getting all the unique characters present in our input file
 # creating some constants that would be required later-
@@ -124,7 +120,7 @@ check_name = os.path.join(checkpoint_dir, "c_{epoch}")
 check_callback = tf.keras.callbacks.ModelCheckpoint(filepath=check_name, save_weights_only=True)
 
 # Training the model now
-history = model.fit(data, epochs= 100, callbacks=[check_callback])
+history = model.fit(data, epochs= 10, callbacks=[check_callback])
 
 # After we train our model, we retrain it with a batch size of 1 and run it again from various checkpoints (usually just calling the last checkpoint)
 model = model_creation(vocab_size, embedding_dim, rnn_units, batch_size=1)
